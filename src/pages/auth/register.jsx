@@ -4,7 +4,11 @@ const halamanRegister = () => {
   return (
     <div>
       <h1>Halaman Register</h1>
-      <Link href="/auth/login">Ke Halaman Login</Link>
+         <p>Jika sudah punya akun, silahkan login</p>
+      <Link href="/auth/login">
+        <button type="button">Login</button>
+      </Link>
+      
     </div>
   );
 };
