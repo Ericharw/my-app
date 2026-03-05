@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [isLogin, setIsLogin] = useState(false);
+/*  const [isLogin, setIsLogin] = useState(false);
   const { push } = useRouter();
 
   useEffect(() => {
@@ -17,12 +17,16 @@ export default function Home() {
     }
   }, [isLogin, push]);
 
-  if (!isLogin) return null;
+  if (!isLogin) return null;*/
 
   return (
-    <div>
-      <h1>Praktikum Next.js Pages Router</h1> <br />
-      <p>Mahasiswa D4 Pengembangan Web</p>
-    </div>
+  <div>
+
+    <Head>
+      <title>Praktikum Next.js Pages Router</title>
+    </Head>
+    <h1 className="text-4xl font-bold ">Praktikum Next.js Pages Router</h1> <br />
+      <p className="text-lg text">Mahasiswa D4 Pengembangan Web</p>
+  </div>
   )
 }
