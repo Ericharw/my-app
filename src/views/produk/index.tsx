@@ -1,27 +1,45 @@
-import styles from "./produk.module.scss";
+import styles from "../../pages/produk/produk.module.scss";
+import Link from "next/link";
 
-const TampilanProduk = ({ products }: { products: any[] }) => {
+type ProductType = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  category: string;
+};
+
+const TampilanProduk = ({ products }: { products: ProductType[] }) => {
   return (
     <div className={styles.produk}>
       <h1 className={styles.produk__title}>Daftar Produk</h1>
       <div className={styles.produk__content}>
         {products.length > 0 ? (
-          products.map((product: any) => (
-            <div key={product.id} className={styles.produk__content__item}>
-              <img src={product.image} alt={product.name} className={styles.produk__content__item__image} />
-              <h4 className={styles.produk__content__item__name}>{product.name}</h4>
-              <p className={styles.produk__content__item__category}>{product.category}</p>
-              <p className={styles.produk__content__item__price}>Rp {product.price.toLocaleString('id-ID')}</p>
-            </div>
-          ))
+          <>
+            {products.map((products: ProductType) => (
+              <Link href={`/produk/${products.id}`} key={products.id} className={styles.produk__content__item}>
+                <div className={styles.produk__content__item__image}>
+                  <img src={products.image} alt={products.name} width={200} />
+                </div>
+                <h4 className={styles.produk__content__item__name}>
+                  {products.name}
+                </h4>
+                <p className={styles.produk__content__item__category}>
+                  {products.category}
+                </p>
+                <p className={styles.produk__content__item__price}>
+                  Rp {products.price.toLocaleString("id-ID")}
+                </p>
+              </Link>
+            ))}
+          </>
         ) : (
-          [1, 2, 3, 4].map((i) => (
-            <div key={i} className={styles.produk__content__skeleton}>
-              <div className={styles.produk__content__skeleton_image} />
-              <div className={styles.produk__content__skeleton_name} />
-              <div className={styles.produk__content__skeleton_price} />
-            </div>
-          ))
+          <div className={styles.produk__content__skeleton}>
+            <div className={styles.produk__content__skeleton_image}></div>
+            <div className={styles.produk__content__skeleton_name}></div>
+            <div className={styles.produk__content__skeleton_category}></div>
+            <div className={styles.produk__content__skeleton_price}></div>
+          </div>
         )}
       </div>
     </div>
