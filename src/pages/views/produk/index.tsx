@@ -11,7 +11,7 @@ const TampilanProduk = ({ products }: { products: any[] }) => {
               <img src={product.image} alt={product.name} className={styles.produk__content__item__image} />
               <h4 className={styles.produk__content__item__name}>{product.name}</h4>
               <p className={styles.produk__content__item__category}>{product.category}</p>
-              <p className={styles.produk__content__item__price}>Rp {product.price.toLocaleString()}</p>
+              <p className={styles.produk__content__item__price}>Rp {product.price.toLocaleString('id-ID')}</p>
             </div>
           ))
         ) : (
