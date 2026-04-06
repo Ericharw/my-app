@@ -48,7 +48,7 @@ export async function getStaticPaths() {
   const paths = response.data.map((product: ProductType) => ({
     params: { produk: product.id }
   }))
-  // console.log("Paths yang dihasilkan untuk produk:", paths); // Debugging: Tampilkan paths yang dihasilkan
+  // console.log("Paths yang dihasilkan untuk produk:", paths);
   return {
     paths,
     fallback: false
