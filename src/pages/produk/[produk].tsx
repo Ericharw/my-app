@@ -42,7 +42,7 @@ export default HalamanProduk;
 
 {/*digunakan static-site generation*/}
 export async function getStaticPaths() {
-  const res = await fetch('http://localhost:3000/api/products')
+  const res = await fetch('http://localhost:3000/api/produk')
   const response = await res.json()
 
   const paths = response.data.map((product: ProductType) => ({
@@ -51,7 +51,7 @@ export async function getStaticPaths() {
   // console.log("Paths yang dihasilkan untuk produk:", paths);
   return {
     paths,
-    fallback: false
+    fallback: 'blocking'
   }
 }
 
@@ -64,6 +64,7 @@ export async function getStaticProps({params}:{params:{produk:string}}) {
   return {
     props: {
       product: response.data,
-    }
+    },
+    revalidate:10
   }
 }
