@@ -1,11 +1,10 @@
-import TampilanRegister from "../../views/auth/register";
+import Link from "next/link";
+import TampilanRegister from "@/views/auth/register";
 
 const halamanRegister = () => {
-    return (
-        <>
-            <TampilanRegister />
-        </>
-    );
+  return (
+    <TampilanRegister />
+  );
 };
 
 export default halamanRegister;
