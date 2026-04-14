@@ -1,99 +1,107 @@
-"use client";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Diperbaiki: menggunakan next/navigation untuk App Router
-// import styles from './login.module.scss'; // Bisa dimatikan karena kita akan full pakai Tailwind
+import style from "../../auth/login/login.module.scss"; 
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { signIn } from "next-auth/react"; // Import fungsi bawaan NextAuth
 
 const TampilanLogin = () => {
-  const { push } = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const { push,query } = useRouter();
 
-  // Mengubah menjadi form event agar bisa ditekan tombol "Enter" di keyboard
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault(); // Mencegah halaman ke-refresh bawaan form HTML
-    push('/produk');
+  const callbackUrl: any = query.callbackUrl || "/";
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    const form = event.currentTarget;
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("Password") as string;
+
+    if (!email) {
+      setError("Email wajib diisi");
+      return;
+    }
+    if (!password) {
+      setError("Password wajib diisi");
+      return;
+    }
+    setIsLoading(true);
+    // Proses login menggunakan NextAuth
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: event.target.email.value,
+        password: event.target.Password.value, 
+        callbackUrl,
+      });
+
+      if (!res?.error) {
+        setIsLoading(false);
+        push(callbackUrl);
+      } else {
+        setIsLoading(false);
+        setError(res?.error || "Login failed");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setError("wrong email or password");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      
-      {/* Container Card Login */}
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-        
-        {/* Header Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-950 mb-2">Selamat Datang</h1>
-          <p className="text-gray-500 text-sm">Masuk ke akun Ericha Store Anda</p>
-        </div>
-
-        {/* Form Login (Email & Password) */}
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+    <div className={style.login}>
+      {error && <p className={style.login__error}>{error}</p>}
+      <h1 className={style.login__title}>Halaman Login</h1>
+      <div className={style.login__form}>
+        <form onSubmit={handleSubmit}>
+          <div className={style.login__form__item}>
+            <label
+              htmlFor="email"
+              className={style.login__form__item__label}
+            >
               Email
             </label>
-            <input 
-              type="email" 
-              placeholder="nama@email.com" 
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
-              required 
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              className={style.login__form__item__input}
             />
           </div>
-          
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+
+          <div className={style.login__form__item}>
+            <label
+              htmlFor="Password"
+              className={style.login__form__item__label}
+            >
               Password
             </label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
-              required 
+            <input
+              type="password"
+              id="Password"
+              name="Password"
+              placeholder="Password"
+              className={style.login__form__item__input}
             />
           </div>
 
-          {/* Lupa Password & Ingat Saya */}
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500" />
-              <span className="text-gray-600 font-medium">Ingat saya</span>
-            </label>
-            <a href="#" className="text-blue-600 hover:text-blue-700 font-semibold transition">
-              Lupa password?
-            </a>
-          </div>
-
-          {/* Tombol Login Utama */}
           <button 
             type="submit" 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl transition duration-300 shadow-md hover:shadow-lg mt-2"
+            className={style.login__form__item__button}
+            disabled={isLoading}
           >
-            Masuk
+            {isLoading ? "Loading..." : "Login"}
           </button>
         </form>
-
-        {/* Garis Pemisah (Divider) */}
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-white text-gray-500 font-medium">Atau</span>
-          </div>
-        </div>
-
-        {/* Tombol Register / Daftar */}
-        <div className="text-center">
-          <p className="text-gray-600 text-sm mb-4">Belum punya akun Ericha Store?</p>
-          <Link href="/auth/register" className="block">
-            <button 
-              type="button" 
-              className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-bold py-3 px-4 rounded-xl transition duration-300"
-            >
-              Daftar Sekarang
-            </button>
-          </Link>
-        </div>
-
+        <br />
+        <p className={style.login__form__item__text}>
+          Belum punya akun? <Link href="/auth/register">Ke Halaman Register</Link>
+        </p>
       </div>
     </div>
   );
