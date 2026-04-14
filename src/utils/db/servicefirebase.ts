@@ -59,6 +59,7 @@ export async function signUp(
       email: userData.email,
       fullname: userData.fullname,
       password: hashedPassword,
+      role: "member",
     };
     await addDoc(collection(db, "users"), dataTersimpan);
     callback({
