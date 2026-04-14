@@ -3,12 +3,11 @@ import style from "../../auth/login/login.module.scss";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react"; 
-import Head from "next/head"; // 1. PASTIKAN MENGIMPORT INI
+import Head from "next/head"; 
 
 const TampilanLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { push, query } = useRouter();
-
   const callbackUrl: any = query?.callbackUrl || "/";
   const [error, setError] = useState("");
 
@@ -24,7 +23,6 @@ const TampilanLogin = () => {
         password: event.target.password.value, 
         callbackUrl,
       });
-
       if (!res?.error) {
         setIsLoading(false);
         push(callbackUrl);
