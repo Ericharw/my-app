@@ -14,7 +14,6 @@ import { add } from "firebase/firestore/pipelines";
 import bcrypt from "bcrypt";
 
 const db = getFirestore(app);
-
 export async function retrieveProducts(collectionName: string) {
   const snapshot = await getDocs(collection(db, collectionName));
   const data = snapshot.docs.map((doc) => ({
@@ -23,13 +22,11 @@ export async function retrieveProducts(collectionName: string) {
   }));
   return data;
 }
-
 export async function retrieveDataByID(collectionName: string, id: string) {
   const snapshot = await getDoc(doc(db, collectionName, id));
   const data = snapshot.data();
   return data;
 }
-
 export async function signUp(
   userData: {
     email: string;
@@ -48,7 +45,6 @@ export async function signUp(
     ...doc.data(),
   }));
   // console.log("Query result:", data);
-
   if (data.length > 0) {
     // user belum ada -> boleh daftar
     // await addDoc(collection(db, "users"), userData);

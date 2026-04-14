@@ -16,6 +16,14 @@ const TampilanRegister = () => {
     const email = formData.get("email") as string;
     const fullname = formData.get("Fullname") as string;
     const password = formData.get("Password") as string;
+    if (!email) {
+      setError("Email wajib diisi");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password harus minimal 6 karakter!");
+      return;
+    }
     setIsLoading(true); // Opsional: biasanya ditambahkan untuk memulai loading
     const response = await fetch("/api/register", {
       method: "POST",
