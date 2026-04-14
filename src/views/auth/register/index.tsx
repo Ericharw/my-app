@@ -8,12 +8,14 @@ const TampilanRegister = () => {
   const { push } = useRouter();
   const [error, setError] = useState("");
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setError("");
+    setIsLoading
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
-    const fullname = formData.get("fullname") as string;
-    const password = formData.get("password") as string;
+    const fullname = formData.get("Fullname") as string;
+    const password = formData.get("Password") as string;
     setIsLoading(true); // Opsional: biasanya ditambahkan untuk memulai loading
     const response = await fetch("/api/register", {
       method: "POST",
@@ -34,13 +36,14 @@ const TampilanRegister = () => {
     } else {
       setIsLoading(false);
       setError(
-        response.status === 400 ? "User already exists" : "An error occurred"
+        response.status === 400 ? "Email already exists" : "An error occurred"
       );
     }
   };
 
   return (
     <div className={style.register}>
+    {error && <p className={style.register__error}>{error}</p>}
       <h1 className={style.register__title}>Halaman Register</h1>
       <div className={style.register__form}>
         <form onSubmit={handleSubmit}>
@@ -92,8 +95,11 @@ const TampilanRegister = () => {
             />
           </div>
 
-          <button type="submit" className={style.register__form__item__button}>
-            Register
+          <button 
+          type="submit" 
+          className={style.register__form__item__button}
+          disabled={isLoading}>
+            {isLoading?"Loading...":"Register"}
           </button>
         </form>
         <br />
