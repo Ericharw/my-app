@@ -3,6 +3,8 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt"; 
 import GoogleProvider from "next-auth/providers/google";
+// Pastikan Anda mengimpor signInWithGoogle dari file service Anda
+import { signInWithGoogle } from "@/utils/db/servicefirebase"; 
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -52,20 +54,27 @@ export const authOptions: NextAuthOptions = {
         token.fullname = user.fullname;
         token.role = user.role;
       }
-      //jika login dengan gooble tambahkan informasi yang diperlukan ke token
+      
+      // Jika login dengan Google, tambahkan informasi yang diperlukan ke token
       if (account?.provider === "google") {
         const data = {
           fullname: user.name,
           email: user.email,
-          image:user.image,
-          type:account.provider,
+          image: user.image,
+          type: account.provider,
         };
-        //console.log("Google login data", {data});
-        token.fullname = data.fullname;
-        token.email = data.email;
-        token.image = data.image;
-        token.type = data.type;
+
+        await signInWithGoogle(data, (result: any) => {
+          if (result.status) {
+            token.fullname = data.fullname;
+            token.email = data.email;
+            token.image = data.image;
+            token.type = data.type;
+            token.role = result.data.role;
+          }
+        });
       }
+      
       return token;
     },
     async session({ session, token }: any) {
@@ -84,7 +93,6 @@ export const authOptions: NextAuthOptions = {
       if (token.type) {
         session.user.type = token.type;
       }
-      // console.log("session callback", { session, token })
       return session;
     },
   },
