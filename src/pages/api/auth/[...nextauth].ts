@@ -88,10 +88,10 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.image;
       }
       if (token.role) {
-        session.user.role = token.role;
+        session.user.role = token.role as "admin" | "member" | "editor";
       }
       if (token.type) {
-        session.user.type = token.type;
+        session.user.type = token.type as string;
       }
       return session;
     },
