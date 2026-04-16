@@ -76,7 +76,7 @@ export async function signUp(
       email: userData.email,
       fullname: userData.fullname,
       password: hashedPassword,
-      role: "member",
+      role: "editor",
     };
     await addDoc(collection(db, "users"), dataTersimpan);
     callback({
@@ -108,7 +108,7 @@ export async function signInWithGoogle(userData: any, callback: any) {
         data: userData,
       });
     } else {
-      userData.role = "member";
+      userData.role = "editor";
       await addDoc(collection(db, "users"), userData);
       callback({
         status: true,

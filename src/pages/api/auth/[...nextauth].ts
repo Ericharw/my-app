@@ -3,7 +3,6 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt"; 
 import GoogleProvider from "next-auth/providers/google";
-// Pastikan Anda mengimpor signInWithGoogle dari file service Anda
 import { signInWithGoogle } from "@/utils/db/servicefirebase"; 
 
 export const authOptions: NextAuthOptions = {
@@ -54,8 +53,7 @@ export const authOptions: NextAuthOptions = {
         token.fullname = user.fullname;
         token.role = user.role;
       }
-      
-      // Jika login dengan Google, tambahkan informasi yang diperlukan ke token
+
       if (account?.provider === "google") {
         const data = {
           fullname: user.name,
