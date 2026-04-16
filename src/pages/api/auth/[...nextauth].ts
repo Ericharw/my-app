@@ -1,14 +1,12 @@
-import { signIn } from "@/utils/db/servicefirebase";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt"; 
 import GoogleProvider from "next-auth/providers/google";
-import { signInWithGoogle } from "@/utils/db/servicefirebase"; 
+import GithubProvider from "next-auth/providers/github";
+import bcrypt from "bcrypt"; 
+import { signIn, signInWithOAuth } from "@/utils/db/servicefirebase"; 
 
 export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
@@ -19,15 +17,9 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-
         const user: any = await signIn(credentials.email);
-
-        if (user) {
-          const isPasswordValid = await bcrypt.compare(
-            credentials.password,
-            user.password,
-          );
-          
+        if (user && user.password) {
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
           if (isPasswordValid) {
             return {
               id: user.id,
@@ -44,59 +36,53 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID || "",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+    }),
   ],
 
   callbacks: {
-    async jwt({ token, account, profile, user }: any) {
+    async jwt({ token, account, user }: any) {
       if (account?.provider === "credentials" && user) {
         token.email = user.email;
         token.fullname = user.fullname;
         token.role = user.role;
       }
 
-      if (account?.provider === "google") {
+      if (account?.provider === "google" || account?.provider === "github") {
         const data = {
-          fullname: user.name,
+          fullname: user.name || user.email?.split("@")[0] || "User",
           email: user.email,
-          image: user.image,
+          image: user.image || "",
           type: account.provider,
         };
 
-        await signInWithGoogle(data, (result: any) => {
+        await signInWithOAuth(data, (result: any) => {
           if (result.status) {
             token.fullname = data.fullname;
             token.email = data.email;
             token.image = data.image;
             token.type = data.type;
-            token.role = result.data.role;
+            token.role = result.data.role || "member";
           }
         });
       }
-      
       return token;
     },
+    
     async session({ session, token }: any) {
-      if (token.email) {
+      if (session.user) {
         session.user.email = token.email;
-      }
-      if (token.fullname) {
         session.user.fullname = token.fullname;
-      }
-      if (token.image) {
         session.user.image = token.image;
-      }
-      if (token.role) {
-        session.user.role = token.role as "admin" | "member" | "editor";
-      }
-      if (token.type) {
-        session.user.type = token.type as string;
+        session.user.role = token.role;
+        session.user.type = token.type;
       }
       return session;
     },
   },
-  pages: {
-    signIn: "/auth/login",
-  },
+  pages: { signIn: "/auth/login" },
 };
 
 export default NextAuth(authOptions);
