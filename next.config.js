@@ -20,6 +20,21 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "image.uniqlo.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "store.pakaianfashionpria.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.newbalance.co.id",
+        pathname: "/**",
+      },
     ],
   },
 };

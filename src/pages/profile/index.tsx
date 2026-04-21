@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-// Sesuaikan path import ini jika file CSS ada di folder lain
+import Image from "next/image";
 import styles from './profile.module.css'; 
 
 const HalamanProfile = () => {
@@ -56,7 +56,12 @@ const HalamanProfile = () => {
 
         <div className={styles.profileSection}>
           <div className={styles.imageContainer}>
-            <img src={imagePreview} alt="Profile" className={styles.profileImage} />
+            {imagePreview?.startsWith('blob:') || imagePreview?.startsWith('data:') ? (
+              <img src={imagePreview} alt="Profile" className={styles.profileImage} />
+            ) : (
+              <Image src={imagePreview || "/placeholder.png"} 
+              alt="Profile" width={150} height={150} className={styles.profileImage} />
+            )}
             {isEditing && (
               <label className={styles.uploadBtn}>
                 Ubah

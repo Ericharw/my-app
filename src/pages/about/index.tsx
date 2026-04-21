@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 
@@ -71,11 +72,21 @@ export default function AboutStore() {
             >
               <div className="w-full h-full bg-blue-50 flex items-center justify-center relative">
                 {logoPreview ? (
-                  <img 
-                    src={logoPreview} 
-                    alt="Store Logo" 
-                    className="w-full h-full object-cover" 
-                  />
+                  logoPreview.startsWith('blob:') || logoPreview.startsWith('data:') ? (
+                    <img 
+                      src={logoPreview} 
+                      alt="Store Logo" 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    <Image 
+                      src={logoPreview} 
+                      alt="Store Logo" 
+                      width={224}
+                      height={224}
+                      className="w-full h-full object-cover" 
+                    />
+                  )
                 ) : (
                   <span className="text-blue-600 text-6xl font-extrabold tracking-wider">ES</span>
                 )}
