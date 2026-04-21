@@ -1,3 +1,4 @@
+import Script from 'next/dist/client/script';
 import styles from './navbar.module.css';
 import { signIn, signOut, useSession } from "next-auth/react";
 
@@ -6,9 +7,14 @@ const Navbar = () => {
 
   return (
     <div className={styles.navbar}>
-      <div className={styles.navbar__brand}>
+      {/*<div className={styles.navbar__brand}>
         MyApp
-      </div>
+      </div>*/}
+
+      <div className={styles.navbar__brand} id="title"></div>
+      <Script id="title-script" strategy='lazyOnload'>
+        {`document.getElementById('title').innerText = 'MyApp';`}
+      </Script>
 
       <div className={styles.navbar__right}>
         {data ? (
