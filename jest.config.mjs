@@ -1,5 +1,5 @@
 import { TestEnvironment } from 'jest-environment-jsdom'
-import nextJest from 'next/jext.js'
+import nextJest from 'next/jest.js'
 
 const createJestConfig = nextJest({
   dir: './',
@@ -7,7 +7,7 @@ const createJestConfig = nextJest({
 
 const config = {
     coverageProvider: 'v8',
-    TestEnvironment: 'jsdom',
+    testEnvironment: 'jsdom',
 }
 
 export default createJestConfig(config)
