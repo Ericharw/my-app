@@ -16,12 +16,10 @@ const kategori = () => {
   //     push("/auth/login");
   //   }
   // },[]);
-
   const { data, isLoading } = useSWR("/api/produk", fetcher);
-
   return (
     <div>
-      <TampilanProduk products={isLoading ? [] : data?.data || []} />
+      <TampilanProduk products={isLoading ? [] : data?.data} />
     </div>
   );
 };
