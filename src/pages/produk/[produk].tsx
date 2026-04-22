@@ -3,11 +3,10 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import DetailProduk from "../../views/DetailProduk";
 import { ProductType } from "@/types/Product.type";
+import { retrieveData, retrieveDataByID } from "@/utils/db/servicefirebase";
 
 const HalamanProduk = ({product}:{product: ProductType}) => {
-  {/*digunakan client-side rendering*/}
-  // // const Router = useRouter();
-  // // console.log(Router);
+  // const Router = useRouter();
   // const { query } = useRouter();
   // const { data, error, isLoading } = useSWR(
   //   `/api/products/${query.produk}`,
@@ -27,28 +26,21 @@ const HalamanProduk = ({product}:{product: ProductType}) => {
 };
 
 export default HalamanProduk;
-
-{/*digunakan server-side rendering*/}
 // export async function getServerSideProps({ params }: { params: { produk: string } }) {
-//   const res = await fetch(`http://localhost:3000/api/produk/${params?.produk}`);
-//   const respone = await res.json();
-//   // console.log("Data produk yang diambil dari API:", respone);
-//   return {
-//     props: {
-//       product: respone.data, // Pastikan untuk memberikan nilai default jika data tidak tersedia
-//     },
-//   };
+//   ...
 // }
 
-{/*digunakan static-site generation*/}
 export async function getStaticPaths() {
-  const res = await fetch('http://localhost:3000/api/produk')
-  const response = await res.json()
+  const products = await retrieveData("products");
 
-  const paths = response.data.map((product: ProductType) => ({
+  if (!products) {
+    return { paths: [], fallback: 'blocking' };
+  }
+
+  const paths = products.map((product: { id: string }) => ({
     params: { produk: product.id }
-  }))
-  // console.log("Paths yang dihasilkan untuk produk:", paths);
+  }));
+
   return {
     paths,
     fallback: 'blocking'
@@ -56,15 +48,12 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({params}:{params:{produk:string}}) {
-  const res = await fetch(`http://localhost:3000/api/produk/${params?.produk}`);
-  // const response: ProductType[] = await res.json();
-  const response: { data: ProductType[] } = await res.json();
+  const productData = await retrieveDataByID("products", params.produk);
 
-  // console.log("Data produk yang diambil dari API:", response);
   return {
     props: {
-      product: response.data,
+      product: productData || null,
     },
-    revalidate:10
+    revalidate: 10
   }
 }
