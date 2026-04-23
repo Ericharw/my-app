@@ -1,7 +1,7 @@
 // import { ProductType } from "@/types/Product.type";
 import { ProductType } from "../../types/Product.type";
 import Image from "next/image";
-import styles from "../detailProduk/detailProduk.module.scss";
+import styles from "./detailProduk/detailProduk.module.scss";
 
 const DetailProduk = ({ products }: { products: ProductType }) => {
   return (
