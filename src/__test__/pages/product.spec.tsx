@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react"
-import TampilanProduk from "@/pages/produk"
+import HalamanProduk from "@/pages/produk"
+import { TombolBantuan } from "@/components/TombolBantuan"
 
 jest.mock("next/router", () => ({
   useRouter() {
@@ -18,10 +19,22 @@ jest.mock("next/router", () => ({
   },
 }))
 
-describe("Product Page", () => {
+jest.mock("swr", () => ({
+  __esModule: true,
+  default: () => ({ data: { data: [] }, isLoading: false })
+}))
+
+describe("Tugas Praktikum Unit Testing", () => {
   it("renders product page correctly", () => {
-    const page = render(<TampilanProduk />)
-    //expect(screen.getByTestId("title").textContent).toBe("Product Page")
+    const page = render(<HalamanProduk />)
+    
+    expect(screen.getByTestId("title").textContent).toBe("Product Page")
     expect(page).toMatchSnapshot()
+  })
+
+  it("renders komponen TombolBantuan correctly", () => {
+    render(<TombolBantuan label="Simpan" />)
+    const button = screen.getByTestId("btn-bantuan")
+    expect(button.textContent).toBe("Simpan")
   })
 })

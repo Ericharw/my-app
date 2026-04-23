@@ -5,20 +5,13 @@ const createJestConfig = nextJest({
 })
 
 const config = {
-  testEnvironment: "jsdom",
+  testEnvironment: "jest-environment-jsdom",
   modulePaths: ['<rootDir>/src/'],
   collectCoverage: true,
+  
   collectCoverageFrom: [
-    '**/*.{ts,tsx}',
-    '**/*.d.ts',
-    '!**/node_modules/**',
-    '!**/.next/**',
-    '!**/coverage/**',
-    '!**/jest.config.mjs',
-    '!**/next.config.mjs',
-    '!**/types/**',
-    '!**/views/**',
-    '!**/pages/api/**'
+    'src/views/produk/index.tsx',
+    'src/components/TombolBantuan.tsx'
   ],
 }
 

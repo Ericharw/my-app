@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Product Page renders product page correctly 1`] = `
+exports[`Tugas Praktikum Unit Testing renders product page correctly 1`] = `
 {
   "asFragment": [Function],
   "baseElement": <body>
@@ -11,8 +11,9 @@ exports[`Product Page renders product page correctly 1`] = `
         >
           <h1
             class="produk__title"
+            data-testid="title"
           >
-            Daftar Produk
+            Product Page
           </h1>
           <div
             class="produk__content"
@@ -45,8 +46,9 @@ exports[`Product Page renders product page correctly 1`] = `
       >
         <h1
           class="produk__title"
+          data-testid="title"
         >
-          Daftar Produk
+          Product Page
         </h1>
         <div
           class="produk__content"
